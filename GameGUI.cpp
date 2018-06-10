@@ -30,10 +30,10 @@ void GameGUI::play()
 
 
 
-
+    duration = 10; //30
 
     window.setTitle(windowTitle);
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
 
     //gameDrawable.draw(window);
     window.display();
@@ -48,15 +48,23 @@ void GameGUI::play()
 
 void GameGUI::eventsService()
 {
-    if(STATE > 0 && time(0) - st > secondsPast)
-        STATE = nextState;
+    if(STATE > 0 && STATE < 4 && time(0) - start > duration) {
+        current_text = "";
+        if(STATE != 3)
+            game.start_round(STATE);
+        window.clear();
+        if(STATE == 3) window.draw(sf::Text(scoreMsg(), font, 120));
+        else window.draw(sf::Text(getText(), font, 120));
+        STATE++;
+        start = time(0);
+    }
 
     sf::Event event;
     while(window.pollEvent(event))
     {
         switch(STATE) {
             case -1: {
-                welcomeEventsService(event);
+                waitForKeyGoToN(event, 0);
                 break;
             }
             case 0: {
@@ -68,24 +76,28 @@ void GameGUI::eventsService()
                 break;
             }
             case 2: {
-                if (time(0) - st < 5)
-                std::cout<<"222 ";
+                roundEventsService(event);
                 break;
             }
             case 3: {
-                std::cout<<"333 ";
+                roundEventsService(event);
                 break;
             }
             case 4: {
-                showScores();
-                std::string s = "You scored " + std::to_string(game.roundScore()) + " points";
-                text.setString(s);
+                text.setString(scoreMsg());
                 window.clear();
-                window.draw(sf::Text(s, font, 120));
-                window.display();
-                st = time(0);
-                secondsPast = 5;
-                STATE = 2;
+                window.draw(sf::Text(scoreMsg(), font, 120));
+                game.start_round(0);
+                if(event.type == sf::Event::Closed) {
+                    window.close();
+                }
+                else
+                if(time(0) - start > 3 && event.type == sf::Event::KeyPressed) {
+                    window.clear();
+                    window.draw(sf::Text("Some start message", font, 120));
+                    STATE = 0;
+                    start = time(0);
+                }
                 break;
             }
             default:
@@ -94,7 +106,12 @@ void GameGUI::eventsService()
     }
 }
 
-void GameGUI::welcomeEventsService(const sf::Event &event) {
+string GameGUI::scoreMsg() const {
+    string s = "You scored " + to_string(game.roundScore()) + " points";
+    return s;
+}
+
+void GameGUI::waitForKeyGoToN(const sf::Event &event, int n) {
     switch(event.type)
         {
             case sf::Event::Closed:
@@ -104,7 +121,8 @@ void GameGUI::welcomeEventsService(const sf::Event &event) {
             {
                 window.clear();
                 window.draw(sf::Text("Some start message", font, 120));
-                STATE++;
+                STATE = n;
+                start = time(0);
                 break;
             }
         };
@@ -119,8 +137,7 @@ void GameGUI::startEventsService(const sf::Event &event) {
         case sf::Event::KeyPressed:
         {
             game.start_round(STATE);
-            //start_time = Time::now();
-            st = time(0);
+            start = time(0);
             window.clear();
             window.draw(sf::Text("Objaśniam zasady gry", font, 120));
             ++STATE;
@@ -141,6 +158,10 @@ void GameGUI::roundEventsService(const sf::Event &event) {
             inputChar(event.key.code);
             window.clear();
             window.draw(sf::Text(getText(), font, 120));
+            if(time(0) - start > duration) {
+                start = time(0);
+                nextState = 4;
+            }
             break;
         }
     };
@@ -171,12 +192,12 @@ bool GameGUI::inputChar(uint c)
     return false;
 }
 
-void GameGUI::makeWindow() //uzywanie setSize rozpierdalalo
-{
-    window.setSize(windowSize);
-    window.setTitle(windowTitle);
-
-}
+//void GameGUI::makeWindow() //uzywanie setSize rozpierdalalo
+//{
+//    window.setSize(windowSize);
+//    window.setTitle(windowTitle);
+//
+//}
 
 int GameGUI::pushWord() {
     int result = game.pushWord(getText());
@@ -190,12 +211,4 @@ int GameGUI::pushWord() {
 
 std::string GameGUI::getText() const {
     return game.getPrefix() + current_text;
-}
-
-int GameGUI::showScores() {
-    std::string s = "You scored " + std::to_string(game.roundScore()) + " points";
-    text.setString(s);
-    window.clear();
-    window.draw(sf::Text(s, font, 120));
-    window.display();
 }
