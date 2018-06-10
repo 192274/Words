@@ -18,7 +18,6 @@ void GameGUI::play()
     fontAddress = "Butler_Regular_Stencil.otf";     //"heneczek-regular-1508762860.otf";    //"FFF_Tusj.ttf";
     font.loadFromFile(fontAddress);
     windowTitle = "Majestic Window";
-    windowSize = sf::Vector2u(1200, 700);
     inputTextPosition = sf::Vector2f(100, 500);
     inputTextSize = 190;
     backgroundColor = sf::Color(0, 0, 0);
@@ -279,7 +278,8 @@ sf::VertexArray GameGUI::disappearingFrame(double percent, sf::VertexArray frame
 sf::VertexArray GameGUI::quads(int r, int g, int b, int alpha, float ax, float bx) const {
     sf::VertexArray quad (sf::Quads, 16);
     for(int i = 0; i < 16; i++) quad[i].color = sf::Color(r, g, b, alpha);
-    float ay = ax, by = bx = 0;
+    float ay = ax, by = 3;
+    bx = 3;
 
     quad[0].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 + ay) + by);
     quad[3].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 - ay) - by);

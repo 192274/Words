@@ -1,0 +1,16 @@
+/home/w/Programs/clion-2017.3.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug CMAKE_CXX_STANDARD=11 -G "CodeBlocks - Unix Makefiles" /home/w/Workplace/SFML_Game
+-- Found SFML .. in /usr/include
+-- Configuring done
+CMake Error at CMakeLists.txt:9 (add_executable):
+  Cannot find source file:
+
+    EndingState.h
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .m .M .mm .h .hh .h++ .hm .hpp
+  .hxx .in .txx
+
+
+CMake Error: CMake can not determine linker language for target: SFML_Game
+CMake Error: Cannot determine link language for target "SFML_Game".
+-- Generating done
+-- Build files have been written to: /home/w/Workplace/SFML_Game/cmake-build-debug

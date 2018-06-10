@@ -1,0 +1,1 @@
+/usr/bin/c++  -fpermissive -std=c++0x -g  -rdynamic CMakeFiles/SFML_Game.dir/main.cpp.o CMakeFiles/SFML_Game.dir/Dictionary.cpp.o CMakeFiles/SFML_Game.dir/Game.cpp.o CMakeFiles/SFML_Game.dir/Round.cpp.o CMakeFiles/SFML_Game.dir/GameGUI.cpp.o CMakeFiles/SFML_Game.dir/GameDrawable.cpp.o  -o SFML_Game -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsfml-audio 
