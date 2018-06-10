@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <assert.h>
 #include "GameGUI.h"
 #include "GameState.h"
 #include "GameDrawable.h"
@@ -16,30 +15,28 @@ GameGUI::GameGUI() : game(){
 
 void GameGUI::play()
 {
-
-
-
-
     fontAddress = "Butler_Regular_Stencil.otf";     //"heneczek-regular-1508762860.otf";    //"FFF_Tusj.ttf";
     font.loadFromFile(fontAddress);
     windowTitle = "Majestic Window";
-    windowSize = sf::Vector2u(800, 600);
+    windowSize = sf::Vector2u(1200, 700);
     inputTextPosition = sf::Vector2f(100, 500);
     inputTextSize = 190;
     backgroundColor = sf::Color(0, 0, 0);
     inputTextColor = sf::Color(255, 255, 255);
-    rulesS = {"You need to complete words with gaven prefixes. To check the word, push space or enter. Tab will"
-                               "restore last pushed word."};
-    sf::Text welcomeText(L"Words", font, 150);
 
 
-
-
+    sf::Text welcomeText(L"Words", font, 90);
     sf::FloatRect textRect = welcomeText.getLocalBounds();
-    welcomeText.setOrigin(textRect.left + textRect.width/2.0f,
-                   textRect.top  + textRect.height/2.0f);
+    welcomeText.setOrigin(textRect.left + textRect.width/2.0f, textRect.top  + textRect.height/2.0f);
 
     welcomeText.setPosition(sf::Vector2f(windowSize.x/2.0f,windowSize.y/2.0f));
+
+    rulesText = {L"You need to complete words with gaven prefixes.\n To submit the word, push space or enter.\n Tab restores "
+                         "last pushed word.", font, 50};
+    //rulesText.setScale(0.3, 0.01);
+    sf::FloatRect rulesRect = rulesText.getLocalBounds();
+    rulesText.setOrigin(rulesRect.left + rulesRect.width/2.0f, rulesRect.top + rulesRect.height/2.0f);
+    rulesText.setPosition(sf::Vector2f(windowSize.x/2.0f, windowSize.y/2.0f));
 
 
     sf::Text points;
@@ -55,10 +52,10 @@ void GameGUI::play()
 
 
 
-    duration = 10; //30
+    duration = 30; //30
 
     window.setTitle(windowTitle);
-    //window.setFramerateLimit(360);
+    window.setFramerateLimit(60);
     sf::VertexArray frame {quads(255,255,255,255,0.86,3)};
 
     double percent;
@@ -154,7 +151,7 @@ void GameGUI::waitForKeyGoToN(const sf::Event &event, int n) {
             case sf::Event::KeyPressed:
             {
                 window.clear();
-                window.draw(sf::Text(rulesS, font, 120));
+                window.draw(rulesText);
                 STATE = n;
                 start = time(0);
                 break;
@@ -282,7 +279,7 @@ sf::VertexArray GameGUI::disappearingFrame(double percent, sf::VertexArray frame
 sf::VertexArray GameGUI::quads(int r, int g, int b, int alpha, float ax, float bx) const {
     sf::VertexArray quad (sf::Quads, 16);
     for(int i = 0; i < 16; i++) quad[i].color = sf::Color(r, g, b, alpha);
-    float ay = ax, by = bx;
+    float ay = ax, by = bx = 0;
 
     quad[0].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 + ay) + by);
     quad[3].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 - ay) - by);
