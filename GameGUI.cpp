@@ -15,6 +15,10 @@ GameGUI::GameGUI() : game(){
 
 void GameGUI::play()
 {
+
+
+
+
     fontAddress = "Butler_Regular_Stencil.otf";     //"heneczek-regular-1508762860.otf";    //"FFF_Tusj.ttf";
     font.loadFromFile(fontAddress);
     windowTitle = "Majestic Window";
@@ -24,6 +28,45 @@ void GameGUI::play()
     backgroundColor = sf::Color(0, 0, 0);
     inputTextColor = sf::Color(255, 255, 255);
     sf::Text welcomeText(L"Witaj w grze!\nPóźniej objaśnię szczegóły.", font);
+
+    float b = 3;
+    float a = 0.9;
+
+    sf::VertexArray quad (sf::Quads, 16);
+    float a = 0.1, float b = 0.3;
+    float o = 2 * (windowSize.x + windowSize.y) * (1 - 2 * a) - 4 * b;
+    float ax = 0.9, bx = 0.03, by = 0.03, ay = 0.9;
+    for(int i = 0; i < 16; i++) {
+        for(int j = 0; j < 4; j++) {
+            quad[0].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 + ay) + by);
+            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)+bx, windowSize.y/2*(1-ay)-by);
+            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)-bx, windowSize.y/2*(1-ay)-by);
+            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)-bx, windowSize.y/2*(1+ay)+by);
+        }
+    }
+    quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)+bx, windowSize.y/2*(1+ay)+by);
+    quad[1].position = sf::Vector2f(windowSize.x * ax - bx, windowSize.y * ax+bx);
+    quad[0].position = sf::Vector2f(windowSize.x * ax - bx, windowSize.y * (1-ax) +bx);
+    quad[0].position = sf::Vector2f(windowSize.x * ax+bx, windowSize.y * (1-a) +bx);
+
+    quad[0].position = sf::Vector2f(windowSize.x * (1-a)+b, windowSize.y * (1-a)+b);
+    quad[0].position = sf::Vector2f(windowSize.x * (1-a)+b, windowSize.y * (1-a));
+    quad[0].position = sf::Vector2f(windowSize.x * a, windowSize.y * (1-a));
+    quad[0].position = sf::Vector2f(windowSize.x * a, windowSize.y * (1-a));
+
+    quad[0].position = sf::Vector2f(windowSize.x * 0.1, windowSize.y * 0.1);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.87, windowSize.y * 0.1);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.87, windowSize.y * 0.13);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.13, windowSize.y * 0.);
+
+    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
+    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
+
+
+
+
 
     welcomeText.setPosition(100, 300);
     text.setPosition(100, 500);
@@ -38,6 +81,7 @@ void GameGUI::play()
     window.display();
     while(window.isOpen())
     {
+        window.draw(quad);
         eventsService();
         window.display();
     }
