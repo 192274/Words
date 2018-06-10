@@ -30,11 +30,11 @@ void GameGUI::play()
     inputTextColor = sf::Color(255, 255, 255);
     sf::Text welcomeText(L"Witaj w grze!\nPóźniej objaśnię szczegóły.", font);
     sf::Text points;
-    points.setPosition(windowSize.x-280, windowSize.y-200);
+    points.setPosition(windowSize.x-40, 20);
     points.setFont(font);
 
     float a = 0.9, b = 0.03;
-    float o = 2 * (windowSize.x + windowSize.y) * (1 - 2 * a) - 4 * b;
+
 
 
     welcomeText.setPosition(100, 300);
@@ -48,12 +48,18 @@ void GameGUI::play()
     //window.setFramerateLimit(60);
     sf::VertexArray frame {quads(255,255,255,255,0.86,3)};
 
+    double percent;
+
     window.display();
     while(window.isOpen())
     {
-        window.draw(points.setString(static_cast<std::string>(game.points)));
-        window.draw(frame);
+        percent = (time(0)-start)*1./duration;
+        window.clear();
+        points.setString(std::to_string(game.roundScore()));
+        window.draw(points);
+        window.draw(disappearingFrame(percent,frame,0.86,3));
         eventsService();
+
         window.display();
     }
 }
@@ -206,9 +212,6 @@ void GameGUI::roundEventsService(const sf::Event &event) {
     };
 }
 
-std::string GameGUI::points() const {
-    return static_cast<std::string>(game.roundScore());
-}
 
 bool GameGUI::inputChar(uint c)
 {
@@ -261,4 +264,21 @@ sf::VertexArray GameGUI::timer(sf::VertexArray quad) {
     float alpha = (time(0) - start)/duration;
     for(int i = 0; i < 15; ++i)
         quad[i].color = sf::Color(125,125,255*alpha/**((time(0)+1-start)%2)*/);
+}
+
+sf::VertexArray GameGUI::disappearingFrame(double percent, sf::VertexArray frame, float a, float b ) {
+    double o = 2 * (windowSize.x + windowSize.y) * (1 - 2 * a) - 4 * b;
+    int k = 3;
+    while(percent < k/4. && k) {
+        frame[4*k+1] = frame[4*k+1] = frame[4*k+1] = frame[4*k+1];
+        k--;
+    }
+    float x, y;
+    if(k <= 2)
+        percent *= -1;
+    if(k%2)
+        frame[4*k-4].position.x = frame[4*k-3].position.x *= percent;
+    else
+        frame[4*k-4].position.y = frame[4*k-3].position.y *= percent;
+    return frame;
 }
