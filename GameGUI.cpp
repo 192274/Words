@@ -244,7 +244,7 @@ int GameGUI::pushWord() {
     return result;
 }
 
-wchar_t GameGUI::getText() const {
+std::string GameGUI::getText() const {
     return game.getPrefix() + current_text;
 }
 
