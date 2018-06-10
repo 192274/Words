@@ -13,6 +13,7 @@
 GameGUI::GameGUI() : game(){
 }
 
+
 void GameGUI::play()
 {
 
@@ -28,44 +29,12 @@ void GameGUI::play()
     backgroundColor = sf::Color(0, 0, 0);
     inputTextColor = sf::Color(255, 255, 255);
     sf::Text welcomeText(L"Witaj w grze!\nPóźniej objaśnię szczegóły.", font);
+    sf::Text points;
+    points.setPosition(windowSize.x-280, windowSize.y-200);
+    points.setFont(font);
 
-    float b = 3;
-    float a = 0.9;
-
-    sf::VertexArray quad (sf::Quads, 16);
-    float a = 0.1, float b = 0.3;
+    float a = 0.9, b = 0.03;
     float o = 2 * (windowSize.x + windowSize.y) * (1 - 2 * a) - 4 * b;
-    float ax = 0.9, bx = 0.03, by = 0.03, ay = 0.9;
-    for(int i = 0; i < 16; i++) {
-        for(int j = 0; j < 4; j++) {
-            quad[0].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 + ay) + by);
-            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)+bx, windowSize.y/2*(1-ay)-by);
-            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)-bx, windowSize.y/2*(1-ay)-by);
-            quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)-bx, windowSize.y/2*(1+ay)+by);
-        }
-    }
-    quad[0].position = sf::Vector2f(windowSize.x/2*(1+ax)+bx, windowSize.y/2*(1+ay)+by);
-    quad[1].position = sf::Vector2f(windowSize.x * ax - bx, windowSize.y * ax+bx);
-    quad[0].position = sf::Vector2f(windowSize.x * ax - bx, windowSize.y * (1-ax) +bx);
-    quad[0].position = sf::Vector2f(windowSize.x * ax+bx, windowSize.y * (1-a) +bx);
-
-    quad[0].position = sf::Vector2f(windowSize.x * (1-a)+b, windowSize.y * (1-a)+b);
-    quad[0].position = sf::Vector2f(windowSize.x * (1-a)+b, windowSize.y * (1-a));
-    quad[0].position = sf::Vector2f(windowSize.x * a, windowSize.y * (1-a));
-    quad[0].position = sf::Vector2f(windowSize.x * a, windowSize.y * (1-a));
-
-    quad[0].position = sf::Vector2f(windowSize.x * 0.1, windowSize.y * 0.1);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.87, windowSize.y * 0.1);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.87, windowSize.y * 0.13);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.13, windowSize.y * 0.);
-
-    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
-    quad[0].position = sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1);
-
-
-
 
 
     welcomeText.setPosition(100, 300);
@@ -77,14 +46,43 @@ void GameGUI::play()
 
     window.setTitle(windowTitle);
     //window.setFramerateLimit(60);
+    sf::VertexArray frame {quads(255,255,255,255,0.86,3)};
 
     window.display();
     while(window.isOpen())
     {
-        window.draw(quad);
+        window.draw(points.setString(static_cast<std::string>(game.points)));
+        window.draw(frame);
         eventsService();
         window.display();
     }
+}
+
+sf::VertexArray GameGUI::quads(int r, int g, int b, int alpha, float ax, float bx) const {
+    sf::VertexArray quad (sf::Quads, 16);
+    for(int i = 0; i < 16; i++) quad[i].color = sf::Color(r, g, b, alpha);
+    float ay = ax, by = bx;
+
+    quad[0].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 + ay) + by);
+    quad[1].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 - ay) - by);
+    quad[2].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) - bx, windowSize.y / 2 * (1 - ay) - by);
+    quad[3].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) - bx, windowSize.y / 2 * (1 + ay) + by);
+
+    quad[4].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 - ay) - by);
+    quad[5].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) + bx, windowSize.y / 2 * (1 - ay) + by);
+    quad[6].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) + bx, windowSize.y / 2 * (1 - ay) + by);
+    quad[7].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) + bx, windowSize.y / 2 * (1 - ay) - by);
+
+    quad[8].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) + bx, windowSize.y / 2 * (1 - ay) - by);
+    quad[9].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) - bx, windowSize.y / 2 * (1 - ay) - by);
+    quad[10].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) - bx, windowSize.y / 2 * (1 + ay) - by);
+    quad[11].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) + bx, windowSize.y / 2 * (1 + ay) - by);
+
+    quad[12].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) - bx, windowSize.y / 2 * (1 + ay) - by);
+    quad[13].position = sf::Vector2f(windowSize.x / 2 * (1 - ax) - bx, windowSize.y / 2 * (1 + ay) + by);
+    quad[14].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) - bx, windowSize.y / 2 * (1 + ay) + by);
+    quad[15].position = sf::Vector2f(windowSize.x / 2 * (1 + ax) - bx, windowSize.y / 2 * (1 + ay) - by);
+    return quad;
 }
 
 void GameGUI::eventsService()
@@ -208,6 +206,10 @@ void GameGUI::roundEventsService(const sf::Event &event) {
     };
 }
 
+std::string GameGUI::points() const {
+    return static_cast<std::string>(game.roundScore());
+}
+
 bool GameGUI::inputChar(uint c)
 {
     if(c == 8)                                  //backspace
@@ -252,4 +254,11 @@ int GameGUI::pushWord() {
 
 std::string GameGUI::getText() const {
     return game.getPrefix() + current_text;
+}
+
+
+sf::VertexArray GameGUI::timer(sf::VertexArray quad) {
+    float alpha = (time(0) - start)/duration;
+    for(int i = 0; i < 15; ++i)
+        quad[i].color = sf::Color(125,125,255*alpha/**((time(0)+1-start)%2)*/);
 }
