@@ -35,15 +35,12 @@ void GameGUI::play()
     window.setTitle(windowTitle);
     //window.setFramerateLimit(60);
 
-    //gameDrawable.draw(window);
     window.display();
     while(window.isOpen())
     {
-        //std::cout<<'\n'<<game.rounds[0].duration();
         eventsService();
         window.display();
     }
-    std::cout<<"The end";
 }
 
 void GameGUI::eventsService()
@@ -63,27 +60,27 @@ void GameGUI::eventsService()
     while(window.pollEvent(event))
     {
         switch(STATE) {
-            case -1: {
+            case GameState::TITLE: {
                 waitForKeyGoToN(event, 0);
                 break;
             }
-            case 0: {
+            case GameState::RULES: {
                 startEventsService(event);
                 break;
             }
-            case 1: {
+            case GameState::ROUND_1: {
                 roundEventsService(event);
                 break;
             }
-            case 2: {
+            case GameState::ROUND_2: {
                 roundEventsService(event);
                 break;
             }
-            case 3: {
+            case GameState::ROUND_3: {
                 roundEventsService(event);
                 break;
             }
-            case 4: {
+            case GameState::SCORES: {
                 text.setString(scoreMsg());
                 window.clear();
                 window.draw(sf::Text(scoreMsg(), font, 120));
